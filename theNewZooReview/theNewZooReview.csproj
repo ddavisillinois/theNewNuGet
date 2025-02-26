@@ -7,8 +7,11 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <PackageId>NuGet.Workflow</PackageId>
+    <PackageId>NuGet.theNewZooReview</PackageId>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/acraven/blog-nuget-workflow-github-actions</RepositoryUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Data Transport Object</Title>
+    <Description>New Zoo Data Transfer Object</Description>
   </PropertyGroup>
 </Project>
