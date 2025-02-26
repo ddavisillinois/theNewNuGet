@@ -1,27 +1,40 @@
+name: "Deploy to NuGet"
+
 on:
-    push:
-      tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+  push:
+    tags:
+    - 'v*'
+
+env:
+  PROJECT_PATH: 'theNewNuGet/theNewNuGet.csproj'
+  PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\output
+  NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
+
 jobs:
-    build:
-      runs-on: ubuntu-latest
-      timeout-minutes: 15
-      steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Verify commit exists in origin/main
-        run: |
-          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
-          git branch --remote --contains | grep origin/main
-      - name: Set VERSION variable from tag
-        run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
-      - name: Build
-        run: dotnet build --configuration Release /p:Version=${VERSION}
-      - name: Test
-        run: dotnet test --configuration Release /p:Version=${VERSION} --no-build
-      - name: Pack
-        run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output .
-      - name: Push
-        run: dotnet nuget push NuGet.Workflow.${VERSION}.nupkg --source https://nuget.pkg.github.com/acraven/index.json --api-key ${GITHUB_TOKEN}
-        env:
-          GITHUB_TOKEN: ${{ secrets.nugetauthtoken }}
+  deploy:
+    name: 'Deploy'
+    runs-on: 'windows-latest'
+    steps:
+    - name: 'Checkout'
+      uses: actions/checkout@v2
+
+    - name: 'Install dotnet'
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: 'Restore packages'
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+
+    - name: 'Build project'
+      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
+
+    - name: 'Get Version'
+      id: version
+      uses: battila7/get-version-action@v2
+
+    - name: 'Pack project'
+      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+
+    - name: 'Push package'
+      run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.nugetauthtoken }} -s ${{ env.NUGET_SOURCE_URL }}
