@@ -1,17 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <PackageId>NuGet.theNewZooReview</PackageId>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/acraven/blog-nuget-workflow-github-actions</RepositoryUrl>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>Data Transport Object</Title>
+
+    <PackageId>CGHM.theNewZooReview</PackageId>
+    <Version>0.0.002</Version>
     <Description>New Zoo Data Transfer Object</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 </Project>
