@@ -1,6 +1,6 @@
 namespace ddPotLuckClassLibrary
 {
-    // Version 0.001 bump
+    // Version 0.0.906 trigger attempt
 
     public class dtblRequestData
     {
