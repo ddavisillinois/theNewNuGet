@@ -1,5 +1,5 @@
 ﻿namespace theNewZooReview;
-// Make waves
+// Trigger debugging
 public class zootSuit
 {
     public string? Email { get; set; }
